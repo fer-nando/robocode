@@ -191,7 +191,7 @@ public abstract class RobocodeTestBed extends BattleAdaptor {
 		if (getExpectedRobotCount(robotList) > 0) {
 			Assert.assertNotNull("Robot were not loaded", robotSpecifications);
 			Assert.assertEquals("Robot were not loaded", getExpectedRobotCount(robotList), robotSpecifications.length);
-			engine.runBattle(new BattleSpecification(numRounds, battleFieldSpec, robotSpecifications), initialPositions,
+			engine.runBattle(new BattleSpecification(numRounds, battleFieldSpec, robotSpecifications), initialPositions, null,
 					true);
 		}
 	}

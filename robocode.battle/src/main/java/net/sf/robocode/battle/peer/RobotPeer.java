@@ -169,7 +169,7 @@ public final class RobotPeer implements IRobotPeerBattle, IRobotPeer {
 		}
 
 		this.statics = new RobotStatics(robotSpecification, duplicate, isTeamLeader, battleRules, teamName, teamMembers,
-				robotIndex, teamIndex);
+				robotIndex, teamIndex, new String[]{battle.getTeamAName(), battle.getTeamBName()});
 		this.statistics = new RobotStatistics(this, battle.getRobotsCount());
 
 		this.robotProxy = (IHostingRobotProxy) hostManager.createRobotProxy(robotSpecification, statics, this);
@@ -267,6 +267,10 @@ public final class RobotPeer implements IRobotPeerBattle, IRobotPeer {
 
 	public String getVeryShortName() {
 		return statics.getVeryShortName();
+	}
+	
+	public String getDisplayName() {
+		return statics.getDisplayName();
 	}
 
 	public int getRobotIndex() {

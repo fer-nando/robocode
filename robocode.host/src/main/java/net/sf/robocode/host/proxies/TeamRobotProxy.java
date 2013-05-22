@@ -88,6 +88,10 @@ public class TeamRobotProxy extends AdvancedRobotProxy implements ITeamRobotPeer
 		}
 
 	}
+	
+	public int getRobotIndex() {
+		return statics.getRobotIndex();
+	}
 
 	@Override
 	protected final void loadTeamMessages(List<TeamMessage> teamMessages) {

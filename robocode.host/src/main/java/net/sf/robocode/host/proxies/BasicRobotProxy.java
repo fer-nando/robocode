@@ -232,7 +232,7 @@ public class BasicRobotProxy extends HostingRobotProxy implements IBasicRobotPee
 
 	public String getName() {
 		getCall();
-		return statics.getName();
+		return statics.getDisplayName();
 	}
 
 	public long getTime() {

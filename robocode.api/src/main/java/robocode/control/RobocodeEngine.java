@@ -236,23 +236,23 @@ public class RobocodeEngine implements IRobocodeEngine {
 	 * {@inheritDoc}
 	 */
 	public void runBattle(BattleSpecification battleSpecification) {
-		runBattle(battleSpecification, null, false);
+		runBattle(battleSpecification, null, null, false);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void runBattle(BattleSpecification battleSpecification, boolean waitTillOver) {
-		runBattle(battleSpecification, null, waitTillOver);
+		runBattle(battleSpecification, null, null, waitTillOver);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void runBattle(BattleSpecification battleSpecification, String initialPositions, boolean waitTillOver) {
+	public void runBattle(BattleSpecification battleSpecification, String initialPositions, String teamNames, boolean waitTillOver) {
 		this.battleSpecification = battleSpecification;
 		ContainerBase.getComponent(IBattleManagerBase.class).startNewBattle(battleSpecification, initialPositions,
-				waitTillOver, false);
+				teamNames, waitTillOver, false);
 	}
 
 	/**

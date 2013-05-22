@@ -9,6 +9,7 @@ package net.sf.robocode.battle;
 
 
 import robocode.control.BattleSpecification;
+import robocode.control.RobotSpecification;
 import robocode.control.events.IBattleListener;
 
 
@@ -24,5 +25,5 @@ public interface IBattleManagerBase {
 
 	void stop(boolean waitTillEnd);
 
-	void startNewBattle(BattleSpecification spec, String initialPositions, boolean waitTillOver, boolean enableCLIRecording);
+	void startNewBattle(BattleSpecification spec, String initialPositions, String teamNames, boolean waitTillOver, boolean enableCLIRecording);
 }

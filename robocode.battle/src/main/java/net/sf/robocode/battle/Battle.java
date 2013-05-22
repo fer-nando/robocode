@@ -29,6 +29,7 @@ import robocode.control.events.RoundEndedEvent;
 import robocode.control.snapshot.BulletState;
 import robocode.control.snapshot.ITurnSnapshot;
 
+import java.awt.geom.Rectangle2D;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
@@ -78,6 +79,10 @@ public final class Battle extends BaseBattle {
 
 	// Initial robot start positions (if any)
 	private double[][] initialRobotPositions;
+	
+	private String teamAName;
+	private String teamBName;
+	private int winnerTeam;
 
 	public Battle(ISettingsManager properties, IBattleManager battleManager, IHostManager hostManager, ICpuManager cpuManager, BattleEventDispatcher eventDispatcher) {
 		super(properties, battleManager, eventDispatcher);
@@ -86,22 +91,32 @@ public final class Battle extends BaseBattle {
 		this.cpuConstant = cpuManager.getCpuConstant();
 	}
 
-	public void setup(RobotSpecification[] battlingRobotsList, BattleProperties battleProperties, boolean paused) {
+	public void setup(RobotSpecification[] battlingRobotsList, String teamNames, BattleProperties battleProperties, boolean paused) {
 		isPaused = paused;
 		battleRules = HiddenAccess.createRules(battleProperties.getBattlefieldWidth(),
-				battleProperties.getBattlefieldHeight(), battleProperties.getNumRounds(), battleProperties.getGunCoolingRate(),
+				battleProperties.getBattlefieldHeight(), battleProperties.getRescueArea(),
+				battleProperties.getNumRounds(), battleProperties.getGunCoolingRate(),
 				battleProperties.getInactivityTime(), battleProperties.getHideEnemyNames());
 		robotsCount = battlingRobotsList.length;
 		computeInitialPositions(battleProperties.getInitialPositions());
-		createPeers(battlingRobotsList);
+		createPeers(battlingRobotsList, teamNames);
 	}
 
-	private void createPeers(RobotSpecification[] battlingRobotsList) {
+	private void createPeers(RobotSpecification[] battlingRobotsList, String teamNames) {
 		// create teams
 		Map<String, Integer> countedNames = new HashMap<String, Integer>();
 		List<String> teams = new ArrayList<String>();
 		List<String> teamDuplicates = new ArrayList<String>();
 		List<Integer> robotDuplicates = new ArrayList<Integer>();
+		
+		String [] stn = teamNames.split(",");
+		if(stn != null) {
+			teamAName = stn[0];
+			teamBName = stn[1];
+		} else {
+			teamAName = "";
+			teamBName = "";
+		}
 
 		// count duplicate robots, enumerate teams, enumerate team members
 		for (RobotSpecification specification : battlingRobotsList) {
@@ -116,6 +131,7 @@ public final class Battle extends BaseBattle {
 			}
 
 			String teamFullName = HiddenAccess.getRobotTeamName(specification);
+			
 
 			if (teamFullName != null) {
 				if (!teams.contains(teamFullName)) {
@@ -141,10 +157,11 @@ public final class Battle extends BaseBattle {
 			String name = teamFullName.substring(0, teamFullName.length() - 6);
 			Integer order = countedNames.get(name);
 			String newTeamName = name;
-
+			
 			if (order > 1) {
 				newTeamName = name + " (" + (order - 1) + ")";
 			}
+			
 			teamDuplicates.add(0, newTeamName);
 			teamMembers.put(teamFullName, new ArrayList<String>());
 			countedNames.put(name, order - 1);
@@ -158,7 +175,7 @@ public final class Battle extends BaseBattle {
 			int duplicate = -1;
 
 			String newName = name;
-
+			
 			if (order > 1) {
 				duplicate = (order - 2);
 				newName = name + " (" + (order - 1) + ")";
@@ -213,6 +230,14 @@ public final class Battle extends BaseBattle {
 				contestants.add(robotPeer);
 			}
 		}
+	}
+	
+	public String getTeamAName() {
+		return teamAName;
+	}
+	
+	public String getTeamBName() {
+		return teamBName;
 	}
 
 	public void registerDeathRobot(RobotPeer r) {
@@ -408,7 +433,7 @@ public final class Battle extends BaseBattle {
 
 		handleDeadRobots();
 
-		if (isAborted() || oneTeamRemaining()) {
+		if (isAborted() || oneTeamRemaining() || isHostageRescue()) {
 			shutdownTurn();
 		}
 
@@ -461,7 +486,25 @@ public final class Battle extends BaseBattle {
 				if (!leaderFirsts && winningTeam != null) {
 					winningTeam.getTeamLeader().getRobotStatistics().scoreFirsts();
 				}
-			}
+			} else if (isHostageRescue()) {
+				robocode.RoundEndedEvent roundEndedEvent = new robocode.RoundEndedEvent(getRoundNum(), currentTime,
+						totalTurns); 
+
+				for (RobotPeer robotPeer : getRobotsAtRandom()) {
+					robotPeer.getRobotStatistics().generateTotals(); // Generate totals when round is ended
+
+					robotPeer.addEvent(roundEndedEvent);
+					if (robotPeer.getTeamIndex() ==  winnerTeam) {
+						if (!robotPeer.isWinner()) {
+							robotPeer.getRobotStatistics().scoreLastSurvivor();
+							robotPeer.setWinner(true);
+							robotPeer.println("SYSTEM: " + robotPeer.getNameForEvent(robotPeer) + " wins the round.");
+							robotPeer.addEvent(new WinEvent());
+						}
+					}
+				}
+			}				
+			
 			if (isAborted() || isLastRound()) {
 				List<RobotPeer> orderedRobots = new ArrayList<RobotPeer>(robots);
 				Collections.sort(orderedRobots);
@@ -796,6 +839,22 @@ public final class Battle extends BaseBattle {
 			}
 		}
 		return true;
+	}
+	
+	private boolean isHostageRescue() {
+		Rectangle2D.Double[] rescueArea = battleRules.getRescueArea();
+		if (rescueArea == null) {
+			return false;
+		}
+		
+		for (RobotPeer currentRobot : robots) {
+			int index = currentRobot.getTeamIndex();
+			if (currentRobot.isTeamLeader() && rescueArea[index].contains(currentRobot.getX(), currentRobot.getY())) {
+				winnerTeam = index;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// --------------------------------------------------------------------------

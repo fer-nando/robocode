@@ -12,6 +12,7 @@ import robocode.AdvancedRobot;
 import robocode.Robot;
 import robocode.control.RobotSpecification;
 
+import java.awt.geom.Rectangle2D;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -50,6 +51,7 @@ public class BattleProperties implements Serializable {
 	private boolean hideEnemyNames = settings.getBattleDefaultHideEnemyNames();
 	private String selectedRobots;
 	private String initialPositions;
+	private Rectangle2D.Double[] rescueArea = null;
 
 	private final Properties props = new Properties();
 
@@ -251,6 +253,14 @@ public class BattleProperties implements Serializable {
 
 	public void setInitialPositions(String initialPositions) {
 		this.initialPositions = initialPositions; 
+	}
+	
+	public Rectangle2D.Double[] getRescueArea() {
+		return rescueArea;
+	}
+	
+	public void setRescueArea(Rectangle2D.Double[] rescueArea) {
+		this.rescueArea = rescueArea;
 	}
 
 	public void store(FileOutputStream out, String desc) throws IOException {

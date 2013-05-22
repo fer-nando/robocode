@@ -183,4 +183,9 @@ public class TeamRobot extends AdvancedRobot implements ITeamRobot, ITeamEvents 
 			uninitializedException();
 		}
 	}
+	
+	
+	public int getRobotIndex() {
+		return ((ITeamRobotPeer) peer).getRobotIndex();
+	}
 }

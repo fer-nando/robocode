@@ -138,4 +138,6 @@ public interface ITeamRobotPeer extends IAdvancedRobotPeer {
 	 * @since 1.2.6
 	 */
 	List<MessageEvent> getMessageEvents();
+	
+	int getRobotIndex();
 }

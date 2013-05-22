@@ -45,6 +45,13 @@ public interface IRobotSnapshot {
 	 * @return the name of the team.
 	 */
 	String getTeamName();
+	
+	/**
+	 * Returns the name to display.  
+	 *
+	 * @return the name to display.
+	 */
+	String getDisplayName();
 
 	/**
 	 * Returns the index of the robot, which is unique for the specific robot and constant during a battle.

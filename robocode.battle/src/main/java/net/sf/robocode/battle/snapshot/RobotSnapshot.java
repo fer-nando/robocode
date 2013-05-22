@@ -50,6 +50,9 @@ public final class RobotSnapshot implements Serializable, IXmlSerializable, IRob
 
 	/** Very short name of the team leader robot (might be null) */
 	private String teamName;
+	
+	/** Name to display */
+	private String displayName;
 
 	/** The unique robot index */
 	private int robotIndex;
@@ -142,6 +145,7 @@ public final class RobotSnapshot implements Serializable, IXmlSerializable, IRob
 		shortName = robot.getShortName();
 		veryShortName = robot.getVeryShortName();
 		teamName = robot.getTeamName();
+		displayName = robot.getDisplayName();
 
 		robotIndex = robot.getRobotIndex();
 		teamIndex = robot.getTeamIndex();
@@ -195,7 +199,8 @@ public final class RobotSnapshot implements Serializable, IXmlSerializable, IRob
 	// Used to identify buttons
 	// TODO: Fix this so that getRobotIndex() is used instead
 	public String getName() {
-		return name;
+		return displayName;
+		//return name;
 	}
 
 	/**
@@ -203,7 +208,8 @@ public final class RobotSnapshot implements Serializable, IXmlSerializable, IRob
 	 */
 	// Used for text on buttons
 	public String getShortName() {
-		return shortName;
+		return displayName;
+		//return shortName;
 	}
 
 	/**
@@ -211,7 +217,8 @@ public final class RobotSnapshot implements Serializable, IXmlSerializable, IRob
 	 */
 	// Used for drawing the name of the robot on the battle view
 	public String getVeryShortName() {
-		return veryShortName;
+		return displayName;
+		//return veryShortName;
 	}
 
 	/**
@@ -219,6 +226,13 @@ public final class RobotSnapshot implements Serializable, IXmlSerializable, IRob
 	 */
 	public String getTeamName() {
 		return teamName;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDisplayName() {
+		return displayName;
 	}
 
 	/**

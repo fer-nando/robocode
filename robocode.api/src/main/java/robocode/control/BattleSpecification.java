@@ -7,6 +7,8 @@
  *******************************************************************************/
 package robocode.control;
 
+import java.awt.geom.Rectangle2D;
+
 
 /**
  * A BattleSpecification defines a battle configuration used by the {@link RobocodeEngine}.
@@ -25,6 +27,7 @@ public class BattleSpecification implements java.io.Serializable {
 	private final long inactivityTime;
 	private final boolean hideEnemyNames;
 	private final RobotSpecification[] robots;
+	private final Rectangle2D.Double[] rescueArea;
 
 	/**
 	 * Creates a new BattleSpecification with the given number of rounds,
@@ -74,6 +77,7 @@ public class BattleSpecification implements java.io.Serializable {
 		this.battlefieldWidth = battlefieldSize.getWidth();
 		this.battlefieldHeight = battlefieldSize.getHeight();
 		this.robots = robots;
+		this.rescueArea = battlefieldSize.getRescueArea();
 	}
 
 	/**
@@ -138,5 +142,10 @@ public class BattleSpecification implements java.io.Serializable {
 		System.arraycopy(robots, 0, robotsCopy, 0, robots.length);
 
 		return robotsCopy;
+	}
+	
+
+	public Rectangle2D.Double[] getRescueArea() {
+		return rescueArea;
 	}
 }

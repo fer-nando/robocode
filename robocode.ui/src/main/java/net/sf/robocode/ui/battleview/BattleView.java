@@ -9,8 +9,10 @@ package net.sf.robocode.ui.battleview;
 
 
 import net.sf.robocode.battle.snapshot.RobotSnapshot;
+import net.sf.robocode.repository.IRobotItem;
 import net.sf.robocode.robotpaint.Graphics2DSerialized;
 import net.sf.robocode.robotpaint.IGraphicsProxy;
+import net.sf.robocode.security.HiddenAccess;
 import net.sf.robocode.settings.ISettingsManager;
 import net.sf.robocode.settings.ISettingsListener;
 import net.sf.robocode.ui.IImageManager;
@@ -55,6 +57,7 @@ public class BattleView extends Canvas {
 
 	// The battle and battlefield,
 	private BattleField battleField;
+	private RescueArea rescueArea;
 
 	private boolean initialized;
 	private double scale = 1.0;
@@ -355,6 +358,13 @@ public class BattleView extends Canvas {
 				g.drawImage(groundImage, dx, dy, groundWidth, groundHeight, null);
 
 				g.setTransform(savedTx);
+				
+				if(rescueArea != null) {
+					g.setColor(new Color(0, 0, 255, 64));
+					g.fillRect(rescueArea.getX(0), rescueArea.getY(0), rescueArea.getWidth(0), rescueArea.getHeight(0));
+					g.setColor(new Color(0, 255, 0, 64));
+					g.fillRect(rescueArea.getX(1), rescueArea.getY(1), rescueArea.getWidth(1), rescueArea.getHeight(1));
+				}
 			}
 		}
 	}
@@ -465,7 +475,7 @@ public class BattleView extends Canvas {
 			}
 			if (drawRobotName) {
 				g.setColor(Color.white);
-				centerString(g, robotSnapshot.getVeryShortName(), x,
+				centerString(g, robotSnapshot.getDisplayName(), x,
 						y + ROBOT_TEXT_Y_OFFSET + smallFontMetrics.getHeight() / 2, smallFont, smallFontMetrics);
 			}
 		}
@@ -653,6 +663,7 @@ public class BattleView extends Canvas {
 		public void onBattleStarted(BattleStartedEvent event) {
 			battleField = new BattleField(event.getBattleRules().getBattlefieldWidth(),
 					event.getBattleRules().getBattlefieldHeight());
+			rescueArea = new RescueArea(event.getBattleRules().getRescueArea());
 
 			initialized = false;
 			setVisible(true);

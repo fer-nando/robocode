@@ -16,6 +16,7 @@ import net.sf.robocode.serialization.RbSerializer;
 import robocode.BattleRules;
 import robocode.control.RobotSpecification;
 
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -45,8 +46,9 @@ public final class RobotStatics implements IRobotStatics, Serializable {
 	private final String teamName;
 	private final int robotIndex;
 	private final int teamIndex;
+	private final String displayName;
 
-	public RobotStatics(RobotSpecification robotSpecification, int duplicate, boolean isLeader, BattleRules rules, String teamName, List<String> teamMembers, int robotIndex, int teamIndex) {
+	public RobotStatics(RobotSpecification robotSpecification, int duplicate, boolean isLeader, BattleRules rules, String teamName, List<String> teamMembers, int robotIndex, int teamIndex, String[] realTeamNames) {
 		IRobotItem specification = ((IRobotItem) HiddenAccess.getFileSpecification(robotSpecification));
 
 		this.robotIndex = robotIndex;
@@ -64,6 +66,14 @@ public final class RobotStatics implements IRobotStatics, Serializable {
 			name = specification.getUniqueFullClassNameWithVersion();
 			shortName = specification.getUniqueShortClassNameWithVersion();
 			veryShortName = specification.getUniqueVeryShortClassNameWithVersion();
+		}
+		
+		if(veryShortName.contains("TimeA")) {
+			displayName = veryShortName.replace("TimeA", realTeamNames[0]);
+		} else if(veryShortName.contains("TimeB")) {
+			displayName = veryShortName.replace("TimeB", realTeamNames[1]);
+		} else {
+			displayName = veryShortName;
 		}
 
 		this.isJuniorRobot = specification.isJuniorRobot();
@@ -113,6 +123,7 @@ public final class RobotStatics implements IRobotStatics, Serializable {
 		this.teamName = teamName;
 		this.robotIndex = robotIndex;
 		this.teamIndex = teamIndex;
+		this.displayName = veryShortName;
 	}
 
 	public String getAnnonymousName() {
@@ -148,14 +159,17 @@ public final class RobotStatics implements IRobotStatics, Serializable {
 	}
 
 	public String getName() {
+		//return displayName;
 		return name;
 	}
 
 	public String getShortName() {
+		//return displayName;
 		return shortName;
 	}
 
 	public String getVeryShortName() {
+		//return displayName;
 		return veryShortName;
 	}
 
@@ -165,6 +179,10 @@ public final class RobotStatics implements IRobotStatics, Serializable {
 
 	public String getShortClassName() {
 		return shortClassName;
+	}
+	
+	public String getDisplayName() {
+		return displayName;
 	}
 
 	public BattleRules getBattleRules() {
@@ -242,7 +260,6 @@ public final class RobotStatics implements IRobotStatics, Serializable {
 		}
 
 		public Object deserialize(RbSerializer serializer, ByteBuffer buffer) {
-
 			boolean isJuniorRobot = serializer.deserializeBoolean(buffer);
 			boolean isInteractiveRobot = serializer.deserializeBoolean(buffer);
 			boolean isPaintRobot = serializer.deserializeBoolean(buffer);
@@ -256,7 +273,8 @@ public final class RobotStatics implements IRobotStatics, Serializable {
 			String fullClassName = serializer.deserializeString(buffer);
 			String shortClassName = serializer.deserializeString(buffer);
 			BattleRules battleRules = HiddenAccess.createRules(serializer.deserializeInt(buffer),
-					serializer.deserializeInt(buffer), serializer.deserializeInt(buffer), serializer.deserializeDouble(buffer),
+					serializer.deserializeInt(buffer), null,
+					serializer.deserializeInt(buffer), serializer.deserializeDouble(buffer),
 					serializer.deserializeLong(buffer), serializer.deserializeBoolean(buffer));
 
 			List<String> teammates = new ArrayList<String>();

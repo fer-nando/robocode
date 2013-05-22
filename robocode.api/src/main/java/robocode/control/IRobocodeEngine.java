@@ -131,7 +131,7 @@ public interface IRobocodeEngine {
 	 * @see #getLocalRepository()
 	 * @since 1.7.1.2
 	 */
-	void runBattle(BattleSpecification battleSpecification, String initialPositions, boolean waitTillOver);
+	void runBattle(BattleSpecification battleSpecification, String initialPositions, String teamNames, boolean waitTillOver);
 
 	/**
 	 * Will block caller until current battle is over.

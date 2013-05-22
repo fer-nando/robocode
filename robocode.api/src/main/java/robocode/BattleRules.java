@@ -8,6 +8,8 @@
 package robocode;
 
 
+import java.awt.geom.Rectangle2D;
+
 import net.sf.robocode.security.IHiddenRulesHelper;
 
 
@@ -34,6 +36,7 @@ public final class BattleRules implements java.io.Serializable {
 	private final double gunCoolingRate;
 	private final long inactivityTime;
 	private final boolean hideEnemyNames;
+	private final Rectangle2D.Double[] rescueArea;
 
 	/**
 	 * Returns the battlefield width.
@@ -103,14 +106,19 @@ public final class BattleRules implements java.io.Serializable {
 	public boolean getHideEnemyNames() {
 		return hideEnemyNames;
 	}
+	
+	public Rectangle2D.Double[] getRescueArea() {
+		return rescueArea;
+	}
 
-	private BattleRules(int battlefieldWidth, int battlefieldHeight, int numRounds, double gunCoolingRate, long inactivityTime, boolean hideEnemyNames) {
+	private BattleRules(int battlefieldWidth, int battlefieldHeight, Rectangle2D.Double[] rescueArea, int numRounds, double gunCoolingRate, long inactivityTime, boolean hideEnemyNames) {
 		this.battlefieldWidth = battlefieldWidth;
 		this.battlefieldHeight = battlefieldHeight;
 		this.numRounds = numRounds;
 		this.gunCoolingRate = gunCoolingRate;
 		this.inactivityTime = inactivityTime;
 		this.hideEnemyNames = hideEnemyNames;
+		this.rescueArea = rescueArea;
 	}
 
 	static IHiddenRulesHelper createHiddenHelper() {
@@ -119,8 +127,8 @@ public final class BattleRules implements java.io.Serializable {
 
 	private static class HiddenHelper implements IHiddenRulesHelper {
 
-		public BattleRules createRules(int battlefieldWidth, int battlefieldHeight, int numRounds, double gunCoolingRate, long inactivityTime, boolean hideEnemyNames) {
-			return new BattleRules(battlefieldWidth, battlefieldHeight, numRounds, gunCoolingRate, inactivityTime,
+		public BattleRules createRules(int battlefieldWidth, int battlefieldHeight, Rectangle2D.Double[] rescueArea, int numRounds, double gunCoolingRate, long inactivityTime, boolean hideEnemyNames) {
+			return new BattleRules(battlefieldWidth, battlefieldHeight, rescueArea, numRounds, gunCoolingRate, inactivityTime,
 					hideEnemyNames);
 		}
 	}

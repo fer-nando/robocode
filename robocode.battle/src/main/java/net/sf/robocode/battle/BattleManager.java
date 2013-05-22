@@ -85,7 +85,7 @@ public class BattleManager implements IBattleManager {
 	}
 
 	// Called from the RobocodeEngine
-	public void startNewBattle(BattleSpecification spec, String initialPositions, boolean waitTillOver, boolean enableCLIRecording) {
+	public void startNewBattle(BattleSpecification spec, String initialPositions, String teamNames, boolean waitTillOver, boolean enableCLIRecording) {
 		battleProperties = new BattleProperties();
 		battleProperties.setBattlefieldWidth(spec.getBattlefield().getWidth());
 		battleProperties.setBattlefieldHeight(spec.getBattlefield().getHeight());
@@ -95,13 +95,18 @@ public class BattleManager implements IBattleManager {
 		battleProperties.setHideEnemyNames(spec.getHideEnemyNames());
 		battleProperties.setSelectedRobots(spec.getRobots());
 		battleProperties.setInitialPositions(initialPositions);
+		battleProperties.setRescueArea(spec.getRescueArea());
 
 		final RobotSpecification[] robots = repositoryManager.loadSelectedRobots(spec.getRobots());
 
-		startNewBattleImpl(robots, waitTillOver, enableCLIRecording);
+		startNewBattleImpl(robots, teamNames, waitTillOver, enableCLIRecording);
+	}
+	
+	private void startNewBattleImpl(RobotSpecification[] battlingRobotsList, boolean waitTillOver, boolean enableCLIRecording) {
+		startNewBattleImpl(battlingRobotsList, null, waitTillOver, enableCLIRecording);
 	}
 
-	private void startNewBattleImpl(RobotSpecification[] battlingRobotsList, boolean waitTillOver, boolean enableCLIRecording) {
+	private void startNewBattleImpl(RobotSpecification[] battlingRobotsList, String teamNames, boolean waitTillOver, boolean enableCLIRecording) {
 		stop(true);
 
 		logMessage("Preparing battle...");
@@ -127,7 +132,7 @@ public class BattleManager implements IBattleManager {
 		}
 
 		Battle realBattle = Container.createComponent(Battle.class);
-		realBattle.setup(battlingRobotsList, battleProperties, isPaused());
+		realBattle.setup(battlingRobotsList, teamNames, battleProperties, isPaused());
 
 		battle = realBattle;
 

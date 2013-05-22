@@ -20,6 +20,7 @@ import robocode.control.events.IBattleListener;
 import robocode.robotinterfaces.IBasicRobot;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.UnsupportedEncodingException;
@@ -226,8 +227,8 @@ public class HiddenAccess {
 				numRounds, time);
 	}
 
-	public static BattleRules createRules(int battlefieldWidth, int battlefieldHeight, int numRounds, double gunCoolingRate, long inactivityTime, boolean hideEnemyNames) {
-		return rulesHelper.createRules(battlefieldWidth, battlefieldHeight, numRounds, gunCoolingRate, inactivityTime,
+	public static BattleRules createRules(int battlefieldWidth, int battlefieldHeight,  Rectangle2D.Double[] rescueArea, int numRounds, double gunCoolingRate, long inactivityTime, boolean hideEnemyNames) {
+		return rulesHelper.createRules(battlefieldWidth, battlefieldHeight, rescueArea, numRounds, gunCoolingRate, inactivityTime,
 				hideEnemyNames);
 	}
 
