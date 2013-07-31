@@ -59,7 +59,7 @@ public final class BattlePlayer extends BaseBattle {
 			final List<BattleResults> res = recordManager.recordInfo.results;
 
 			eventDispatcher.onBattleCompleted(
-					new BattleCompletedEvent(battleRules, res.toArray(new BattleResults[res.size()])));
+					new BattleCompletedEvent(battleRules, res.toArray(new BattleResults[res.size()]), -1));
 		}
 
 		super.finalizeBattle();

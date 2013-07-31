@@ -47,7 +47,8 @@ import java.util.Random;
 @SuppressWarnings("serial")
 public class BattleView extends Canvas {
 
-	private final static String ROBOCODE_SLOGAN = "Build the best, destroy the rest!";
+	//private final static String ROBOCODE_SLOGAN = "Build the best, destroy the rest!";
+	private final static String ROBOCODE_SLOGAN = "RoboRescue";
 
 	private final static Color CANVAS_BG_COLOR = SystemColor.controlDkShadow;
 
@@ -641,17 +642,17 @@ public class BattleView extends Canvas {
 
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		g.transform(AffineTransform.getTranslateInstance((getWidth() - 320) / 2.0, (getHeight() - 46) / 2.0));
-		g.setColor(new Color(0, 0x40, 0));
-		g.fill(robocodeTextPath);
+		//g.transform(AffineTransform.getTranslateInstance((getWidth() - 320) / 2.0, (getHeight() - 46) / 2.0));
+		//g.setColor(new Color(0, 0x40, 0));
+		//g.fill(robocodeTextPath);
 
-		Font font = new Font("Dialog", Font.BOLD, 14);
+		Font font = new Font("Dialog", Font.BOLD, 48);
 		int width = g.getFontMetrics(font).stringWidth(ROBOCODE_SLOGAN);
 
 		g.setTransform(new AffineTransform());
 		g.setFont(font);
 		g.setColor(new Color(0, 0x50, 0));
-		g.drawString(ROBOCODE_SLOGAN, (float) ((getWidth() - width) / 2.0), (float) (getHeight() / 2.0 + 50));
+		g.drawString(ROBOCODE_SLOGAN, (float) ((getWidth() - width) / 2.0), (float) (getHeight() / 2.0 - 48));
 	}
 
 	private class BattleObserver extends BattleAdaptor {

@@ -85,7 +85,7 @@ public class DirectPlayer {
 					eventDispatcher.onBattleFinished(new BattleFinishedEvent(false));
 					eventDispatcher.onBattleCompleted(
 							new BattleCompletedEvent(recordInfo.battleRules,
-							recordInfo.results.toArray(new BattleResults[recordInfo.results.size()])));
+							recordInfo.results.toArray(new BattleResults[recordInfo.results.size()]), -1));
 				}
 			} else {
 				final RecordRoot root = new RecordRoot(eventDispatcher);
@@ -166,7 +166,7 @@ public class DirectPlayer {
 
 						public void close() {
 							eventDispatcher.onBattleFinished(new BattleFinishedEvent(false));
-							eventDispatcher.onBattleCompleted(new BattleCompletedEvent(recordInfo.battleRules, recordInfo.results.toArray(new BattleResults[recordInfo.results.size()])));
+							eventDispatcher.onBattleCompleted(new BattleCompletedEvent(recordInfo.battleRules, recordInfo.results.toArray(new BattleResults[recordInfo.results.size()]), -1));
 						}
 					});
 

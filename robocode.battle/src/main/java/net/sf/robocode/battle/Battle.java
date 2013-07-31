@@ -97,18 +97,7 @@ public final class Battle extends BaseBattle {
 				battleProperties.getBattlefieldHeight(), battleProperties.getRescueArea(),
 				battleProperties.getNumRounds(), battleProperties.getGunCoolingRate(),
 				battleProperties.getInactivityTime(), battleProperties.getHideEnemyNames());
-		robotsCount = battlingRobotsList.length;
-		computeInitialPositions(battleProperties.getInitialPositions());
-		createPeers(battlingRobotsList, teamNames);
-	}
-
-	private void createPeers(RobotSpecification[] battlingRobotsList, String teamNames) {
-		// create teams
-		Map<String, Integer> countedNames = new HashMap<String, Integer>();
-		List<String> teams = new ArrayList<String>();
-		List<String> teamDuplicates = new ArrayList<String>();
-		List<Integer> robotDuplicates = new ArrayList<Integer>();
-		
+		winnerTeam = -1;
 		String [] stn = teamNames.split(",");
 		if(stn != null) {
 			teamAName = stn[0];
@@ -117,7 +106,18 @@ public final class Battle extends BaseBattle {
 			teamAName = "";
 			teamBName = "";
 		}
+		robotsCount = battlingRobotsList.length;
+		computeInitialPositions(battleProperties.getInitialPositions());
+		createPeers(battlingRobotsList);
+	}
 
+	private void createPeers(RobotSpecification[] battlingRobotsList) {
+		// create teams
+		Map<String, Integer> countedNames = new HashMap<String, Integer>();
+		List<String> teams = new ArrayList<String>();
+		List<String> teamDuplicates = new ArrayList<String>();
+		List<Integer> robotDuplicates = new ArrayList<Integer>();
+		
 		// count duplicate robots, enumerate teams, enumerate team members
 		for (RobotSpecification specification : battlingRobotsList) {
 			final String name = ((IRobotItem) HiddenAccess.getFileSpecification(specification)).getUniqueFullClassNameWithVersion();
@@ -334,7 +334,7 @@ public final class Battle extends BaseBattle {
 		eventDispatcher.onBattleFinished(new BattleFinishedEvent(isAborted()));
 
 		if (!isAborted()) {
-			eventDispatcher.onBattleCompleted(new BattleCompletedEvent(battleRules, computeBattleResults()));
+			eventDispatcher.onBattleCompleted(new BattleCompletedEvent(battleRules, computeBattleResults(), winnerTeam));
 		}
 
 		for (RobotPeer robotPeer : robots) {

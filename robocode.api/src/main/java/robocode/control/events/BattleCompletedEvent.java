@@ -35,6 +35,7 @@ import java.util.List;
 public class BattleCompletedEvent extends BattleEvent {
 	private final BattleRules battleRules;
 	private final BattleResults[] results;
+	private final int winnerTeam;
 
 	/**
 	 * Called by the game to create a new BattleCompletedEvent.
@@ -43,10 +44,11 @@ public class BattleCompletedEvent extends BattleEvent {
 	 * @param battleRules the rules that was used in the battle.
 	 * @param results the indexed results of the battle. These are unsorted, but using robot indexes.
 	 */
-	public BattleCompletedEvent(BattleRules battleRules, BattleResults[] results) {
+	public BattleCompletedEvent(BattleRules battleRules, BattleResults[] results, int winnerTeam) {
 		super();
 		this.battleRules = battleRules;
 		this.results = results;
+		this.winnerTeam = winnerTeam;
 	}
 
 	/**
@@ -85,5 +87,10 @@ public class BattleCompletedEvent extends BattleEvent {
 
 		System.arraycopy(results, 0, copy, 0, results.length);	
 		return copy;
+	}
+	
+	
+	public int getWinnerTeam() {
+		return winnerTeam;
 	}
 }
